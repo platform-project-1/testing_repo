@@ -9,6 +9,9 @@ public class PlayerManager : MonoBehaviour
     PlayerInput actionMap;
     Rigidbody rb;
 
+    [SerializeField, Range(0, 3)]
+    int jumpPhase = 2;
+
     [SerializeField, Range(0f, 100f)]
     float groundSpeed = 10f, acceleration = 5f;
 
@@ -19,7 +22,7 @@ public class PlayerManager : MonoBehaviour
     Vector3 velocity, desiredVelocity;
 
 
-    #region Unity Functions
+    #region Basic Functions
 
     void Awake()
     {
@@ -77,6 +80,31 @@ public class PlayerManager : MonoBehaviour
     {
         this.transform.position = resetPosition.position;
         rb.velocity = Vector3.zero;
+    }
+    #endregion
+
+    #region Collision Functions
+    void OnCollisionEnter(Collision collision)
+    {
+        EvaluateCollision(collision);
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        EvaluateCollision(collision);
+    }
+
+    void EvaluateCollision(Collision collision)
+    {
+        for (int i = 0; i < collision.contactCount; i++)
+        {
+            Vector3 normal = collision.GetContact(i).normal;
+            //if (normal.y >= minGroundDotProduct)
+            //{
+            //    groundContactCount += 1;
+            //    contactNormal += normal;
+            //}
+        }
     }
     #endregion
 }
