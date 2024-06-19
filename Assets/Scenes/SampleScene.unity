@@ -1029,7 +1029,9 @@ GameObject:
   - component: {fileID: 1336642209}
   - component: {fileID: 1336642208}
   - component: {fileID: 1336642207}
-  - component: {fileID: 1336642206}
+  - component: {fileID: 1336642212}
+  - component: {fileID: 1336642213}
+  - component: {fileID: 1336642214}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1037,21 +1039,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1336642206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1336642205}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35d692301e8b1f04c81bda76ee2f7e96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundSpeed: 60
-  acceleration: 13
-  resetPosition: {fileID: 61303771}
 --- !u!54 &1336642207
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1165,6 +1152,47 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1336642212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336642205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4662e7695f92a54a9050c1dbb4fc504, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resetPosition: {fileID: 61303771}
+--- !u!114 &1336642213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336642205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009c6dda7c7ce074c83a622c8ce3b4cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundSpeed: 30
+  acceleration: 20
+--- !u!114 &1336642214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336642205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71573dbae46efab4ab8619b3b76b7f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxJumpPhases: 2
+  jumpForce: 5
 --- !u!1 &1564964653
 GameObject:
   m_ObjectHideFlags: 0
