@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerManager : MonoBehaviour
+public class Movement : MonoBehaviour
 {
     PlayerInput actionMap;
     Rigidbody rb;
@@ -12,15 +12,12 @@ public class PlayerManager : MonoBehaviour
     [SerializeField, Range(0f, 100f)]
     float groundSpeed = 10f, acceleration = 5f;
 
-    [SerializeField]
-    Transform resetPosition;
+    bool sprintPressed;
 
     Vector2 movementInput;
     Vector3 velocity, desiredVelocity;
 
-
-    #region Unity Functions
-
+    #region Basic Functions
     void Awake()
     {
         actionMap = new PlayerInput();
@@ -29,30 +26,24 @@ public class PlayerManager : MonoBehaviour
         actionMap.Movement.Move.started += OnMove;
         actionMap.Movement.Move.performed += OnMove;
         actionMap.Movement.Move.canceled += OnMove;
-        actionMap.Debug.Quit.started += DebugQuitEditor;
-        actionMap.Debug.Reset.started += DebugResetPosition;
+        actionMap.Actions.Sprint.started += OnSprint;
+        actionMap.Actions.Sprint.performed += OnSprint;
+        actionMap.Actions.Sprint.canceled += OnSprint;
     }
 
     void Update()
     {
-        desiredVelocity = 
+        desiredVelocity =
             new Vector3(movementInput.x, 0f, movementInput.y) * groundSpeed;
     }
 
     void FixedUpdate()
     {
-        velocity = rb.velocity;
-        float speedChange = acceleration * Time.deltaTime;
-        velocity.x = 
-            Mathf.MoveTowards(velocity.x, desiredVelocity.x, speedChange);
-        velocity.z = 
-            Mathf.MoveTowards(velocity.z, desiredVelocity.z, speedChange);
-        rb.velocity = velocity;
+        Moving();
     }
     #endregion
 
     #region Input Functions
-
     void OnEnable()
     {
         actionMap.Enable();
@@ -68,15 +59,23 @@ public class PlayerManager : MonoBehaviour
         movementInput = context.ReadValue<Vector2>();
     }
 
-    void DebugQuitEditor(InputAction.CallbackContext context)
+    void OnSprint(InputAction.CallbackContext context)
     {
-        EditorApplication.isPlaying = false;
-    }
-
-    void DebugResetPosition(InputAction.CallbackContext context)
-    {
-        this.transform.position = resetPosition.position;
-        rb.velocity = Vector3.zero;
+        sprintPressed = context.ReadValueAsButton();
     }
     #endregion
+
+    void Moving()
+    {
+        velocity = rb.velocity;
+        float speedChange =
+            sprintPressed ?
+            2 * acceleration * Time.deltaTime :
+            acceleration * Time.deltaTime;
+        velocity.x =
+            Mathf.MoveTowards(velocity.x, desiredVelocity.x, speedChange);
+        velocity.z =
+            Mathf.MoveTowards(velocity.z, desiredVelocity.z, speedChange);
+        rb.velocity = velocity;
+    }
 }
