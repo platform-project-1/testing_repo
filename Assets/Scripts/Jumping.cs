@@ -71,7 +71,7 @@ public class Jumping : MonoBehaviour
 
     void CheckJump()
     {
-        Debug.Log($"jumpPhase = {jumpPhase}");
+        //Debug.Log($"jumpPhase = {jumpPhase}");
         if (jumpValid)
         {
             if (jumpPressed)

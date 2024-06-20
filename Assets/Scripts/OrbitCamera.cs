@@ -144,7 +144,17 @@ public class OrbitCamera : MonoBehaviour
         }
 
         float headingAngle = GetAngle(movement / Mathf.Sqrt(movementDeltaSqr));
-        float rotationChange = rotationSpeed * Time.unscaledDeltaTime;
+        float deltaAbs = Mathf.Abs(Mathf.DeltaAngle(orbitAngles.y, headingAngle));
+        float rotationChange = 
+            rotationSpeed * Mathf.Min(Time.unscaledDeltaTime, movementDeltaSqr);
+        if (deltaAbs < alignSmoothRange)
+        {
+            rotationChange *= deltaAbs / alignSmoothRange;
+        }
+        else if (180f - deltaAbs < alignSmoothRange)
+        {
+            rotationChange *= (180 - deltaAbs) / alignSmoothRange;
+        }
         orbitAngles.y = 
             Mathf.MoveTowardsAngle(orbitAngles.y, headingAngle, rotationChange);
         return true;
