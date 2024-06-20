@@ -11,8 +11,6 @@ public class StickyRoller : MonoBehaviour
     [SerializeField, Range(0f, 100f)]
     float groundSpeed = 10f, acceleration = 5f;
 
-    bool sprintPressed;
-
     Vector2 movementInput;
     Vector3 velocity, desiredVelocity;
 
@@ -25,9 +23,6 @@ public class StickyRoller : MonoBehaviour
         actionMap.Movement.Move.started += OnMove;
         actionMap.Movement.Move.performed += OnMove;
         actionMap.Movement.Move.canceled += OnMove;
-        actionMap.Actions.Sprint.started += OnSprint;
-        actionMap.Actions.Sprint.performed += OnSprint;
-        actionMap.Actions.Sprint.canceled += OnSprint;
     }
 
     void Update()
@@ -57,20 +52,12 @@ public class StickyRoller : MonoBehaviour
     {
         movementInput = context.ReadValue<Vector2>();
     }
-
-    void OnSprint(InputAction.CallbackContext context)
-    {
-        sprintPressed = context.ReadValueAsButton();
-    }
     #endregion
 
     void Moving()
     {
         velocity = rb.velocity;
-        float speedChange =
-            sprintPressed ?
-            2 * acceleration * Time.deltaTime :
-            acceleration * Time.deltaTime;
+        float speedChange = acceleration * Time.deltaTime;
         velocity.x =
             Mathf.MoveTowards(velocity.x, desiredVelocity.x, speedChange);
         velocity.z =

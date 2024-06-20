@@ -43,6 +43,7 @@ public class Debugging : MonoBehaviour
     void ResetPosition(InputAction.CallbackContext context)
     {
         this.transform.position = resetPosition.position;
+        transform.localRotation = Quaternion.identity;
         rb.velocity = Vector3.zero;
     }
     #endregion
