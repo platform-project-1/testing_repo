@@ -12,6 +12,9 @@ public class Movement : MonoBehaviour
     [SerializeField, Range(0f, 100f)]
     float groundSpeed = 10f, acceleration = 5f;
 
+    [SerializeField]
+    Transform relativeCamera = default;
+
     bool sprintPressed;
 
     Vector2 movementInput;
@@ -33,17 +36,38 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        desiredVelocity =
-            new Vector3(movementInput.x, 0f, movementInput.y) * groundSpeed;
+        if (relativeCamera)
+        {
+            // NOT SURE WHICH IS BETTER
+            //desiredVelocity = relativeCamera.TransformDirection(
+            //    movementInput.x, 0f, movementInput.y
+            //    ) * groundSpeed;
+
+            Vector3 forward = relativeCamera.forward;
+            forward.y = 0f;
+            forward.Normalize();
+            Vector3 right = relativeCamera.right;
+            right.y = 0f;
+            right.Normalize();
+            desiredVelocity = 
+                (forward * movementInput.y + right * movementInput.x) * groundSpeed;
+        }
+        else
+        {
+            desiredVelocity =
+                new Vector3(movementInput.x, 0f, movementInput.y) * groundSpeed;
+        }
     }
 
     void FixedUpdate()
     {
         Moving();
+        // FIGURE OUT HOW PREVENT MAGNITUDE FROM DECREASING DURING TURNS
+        //Debug.Log($"rb.velocity.magnitude = {rb.velocity.magnitude}");
     }
     #endregion
 
-    #region Input Functions
+        #region Input Functions
     void OnEnable()
     {
         actionMap.Enable();
