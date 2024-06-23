@@ -47,4 +47,21 @@ public class Debugging : MonoBehaviour
         rb.velocity = Vector3.zero;
     }
     #endregion
+
+    #region Gizmos
+    [Header("Gizmos")]
+    [SerializeField, Range(0f, 10f)]
+    float distance = 1f;
+
+    [SerializeField]
+    Gizmos color;
+    void OnDrawGizmos()
+    {
+        Vector3 position = transform.position;
+        Vector3 direction = transform.forward;
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(position, direction * distance);
+    }
+    #endregion
 }

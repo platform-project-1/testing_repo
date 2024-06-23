@@ -10,15 +10,19 @@ public class Movement : MonoBehaviour
     Rigidbody rb;
 
     [SerializeField, Range(0f, 100f)]
-    float groundSpeed = 10f, acceleration = 5f;
+    float maxAcceleration = 20f;
 
     [SerializeField]
-    Transform relativeCamera = default;
+    Transform target;
+
+    [SerializeField, Range(0f, 100f)]
+    float rotateSpeed = 1f;
 
     bool sprintPressed;
 
     Vector2 movementInput;
-    Vector3 velocity, desiredVelocity;
+
+    Vector3 velocity;
 
     #region Basic Functions
     void Awake()
@@ -34,40 +38,14 @@ public class Movement : MonoBehaviour
         actionMap.Actions.Sprint.canceled += OnSprint;
     }
 
-    void Update()
-    {
-        if (relativeCamera)
-        {
-            // NOT SURE WHICH IS BETTER
-            //desiredVelocity = relativeCamera.TransformDirection(
-            //    movementInput.x, 0f, movementInput.y
-            //    ) * groundSpeed;
-
-            Vector3 forward = relativeCamera.forward;
-            forward.y = 0f;
-            forward.Normalize();
-            Vector3 right = relativeCamera.right;
-            right.y = 0f;
-            right.Normalize();
-            desiredVelocity = 
-                (forward * movementInput.y + right * movementInput.x) * groundSpeed;
-        }
-        else
-        {
-            desiredVelocity =
-                new Vector3(movementInput.x, 0f, movementInput.y) * groundSpeed;
-        }
-    }
-
     void FixedUpdate()
     {
-        Moving();
-        // FIGURE OUT HOW PREVENT MAGNITUDE FROM DECREASING DURING TURNS
-        //Debug.Log($"rb.velocity.magnitude = {rb.velocity.magnitude}");
+        HandleMoving();
+        //HandleRotation();
     }
     #endregion
 
-        #region Input Functions
+    #region Input Functions
     void OnEnable()
     {
         actionMap.Enable();
@@ -81,6 +59,7 @@ public class Movement : MonoBehaviour
     void OnMove(InputAction.CallbackContext context)
     {
         movementInput = context.ReadValue<Vector2>();
+        //movementInput = Vector2.ClampMagnitude(movementInput, 1f);
     }
 
     void OnSprint(InputAction.CallbackContext context)
@@ -89,17 +68,51 @@ public class Movement : MonoBehaviour
     }
     #endregion
 
-    void Moving()
+    #region Movement and Rotation Functions
+    void HandleMoving()
     {
+        // Determines if sprint speed is applied or not
+        float sprint =
+            sprintPressed ? 2f : 1f;
+
+        // Getting camera info
+        Vector3 forward = Camera.main.transform.forward;
+        Vector3 right = Camera.main.transform.right;
+
+        // Creates new vector to adjust movement based on camera
+        Vector3 move = new Vector3(movementInput.x, 0f, movementInput.y);
+        move = forward * move.z + right * move.x;
+
+        // Get velocity, modify, and return it
         velocity = rb.velocity;
-        float speedChange =
-            sprintPressed ?
-            2 * acceleration * Time.deltaTime :
-            acceleration * Time.deltaTime;
-        velocity.x =
-            Mathf.MoveTowards(velocity.x, desiredVelocity.x, speedChange);
-        velocity.z =
-            Mathf.MoveTowards(velocity.z, desiredVelocity.z, speedChange);
+        move.Normalize();
+        velocity.x += move.x * maxAcceleration * sprint * Time.deltaTime;
+        velocity.z += move.z * maxAcceleration * sprint * Time.deltaTime;
         rb.velocity = velocity;
     }
+
+    void HandleRotation()
+    {
+        float step = rotateSpeed * Time.deltaTime;
+
+        Vector3 positionToLookAt;
+
+        positionToLookAt.x = movementInput.x;
+        positionToLookAt.y = 0;
+        positionToLookAt.z = movementInput.y;
+
+        Quaternion currectRotation = transform.rotation;
+
+        if (movementInput.x > 0.01f || movementInput.x < -0.01f ||
+            movementInput.y > 0.01f || movementInput.y < -0.01f)
+        {
+
+            Quaternion targetRotation = Quaternion.LookRotation(
+                positionToLookAt);
+
+            transform.localRotation = Quaternion.Slerp(currectRotation,
+                targetRotation, step);
+        }
+    }
+    #endregion
 }
