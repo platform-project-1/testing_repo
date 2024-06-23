@@ -55,13 +55,19 @@ public class Debugging : MonoBehaviour
 
     [SerializeField]
     Gizmos color;
+
+    [SerializeField]
+    bool drawLineOn = false;
     void OnDrawGizmos()
     {
-        Vector3 position = transform.position;
-        Vector3 direction = transform.forward;
+        if (drawLineOn)
+        {
+            Vector3 position = transform.position;
+            Vector3 direction = transform.forward;
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawRay(position, direction * distance);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(position, direction * distance);
+        }
     }
     #endregion
 }

@@ -15,9 +15,6 @@ public class Movement : MonoBehaviour
     [SerializeField]
     Transform target;
 
-    [SerializeField, Range(0f, 100f)]
-    float rotateSpeed = 1f;
-
     bool sprintPressed;
 
     Vector2 movementInput;
@@ -41,7 +38,7 @@ public class Movement : MonoBehaviour
     void FixedUpdate()
     {
         HandleMoving();
-        //HandleRotation();
+        HandleRotation();
     }
     #endregion
 
@@ -93,26 +90,34 @@ public class Movement : MonoBehaviour
 
     void HandleRotation()
     {
-        float step = rotateSpeed * Time.deltaTime;
-
-        Vector3 positionToLookAt;
-
-        positionToLookAt.x = movementInput.x;
-        positionToLookAt.y = 0;
-        positionToLookAt.z = movementInput.y;
-
-        Quaternion currectRotation = transform.rotation;
-
-        if (movementInput.x > 0.01f || movementInput.x < -0.01f ||
-            movementInput.y > 0.01f || movementInput.y < -0.01f)
+        velocity = rb.velocity;
+        if (velocity.magnitude > 0.01f) 
         {
-
-            Quaternion targetRotation = Quaternion.LookRotation(
-                positionToLookAt);
-
-            transform.localRotation = Quaternion.Slerp(currectRotation,
-                targetRotation, step);
+            Vector3 rotate = new Vector3(velocity.x * Time.deltaTime, 0f, velocity.z * Time.deltaTime);
+            transform.rotation = Quaternion.LookRotation(rotate);
         }
+
+
+        //float step = rotateSpeed * Time.deltaTime;
+
+        //Vector3 positionToLookAt;
+
+        //positionToLookAt.x = movementInput.x;
+        //positionToLookAt.y = 0;
+        //positionToLookAt.z = movementInput.y;
+
+        //Quaternion currectRotation = transform.rotation;
+
+        //if (movementInput.x > 0.01f || movementInput.x < -0.01f ||
+        //    movementInput.y > 0.01f || movementInput.y < -0.01f)
+        //{
+
+        //    Quaternion targetRotation = Quaternion.LookRotation(
+        //        positionToLookAt);
+
+        //    transform.localRotation = Quaternion.Slerp(currectRotation,
+        //        targetRotation, step);
+        //}
     }
     #endregion
 }
