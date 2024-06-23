@@ -96,28 +96,6 @@ public class Movement : MonoBehaviour
             Vector3 rotate = new Vector3(velocity.x * Time.deltaTime, 0f, velocity.z * Time.deltaTime);
             transform.rotation = Quaternion.LookRotation(rotate);
         }
-
-
-        //float step = rotateSpeed * Time.deltaTime;
-
-        //Vector3 positionToLookAt;
-
-        //positionToLookAt.x = movementInput.x;
-        //positionToLookAt.y = 0;
-        //positionToLookAt.z = movementInput.y;
-
-        //Quaternion currectRotation = transform.rotation;
-
-        //if (movementInput.x > 0.01f || movementInput.x < -0.01f ||
-        //    movementInput.y > 0.01f || movementInput.y < -0.01f)
-        //{
-
-        //    Quaternion targetRotation = Quaternion.LookRotation(
-        //        positionToLookAt);
-
-        //    transform.localRotation = Quaternion.Slerp(currectRotation,
-        //        targetRotation, step);
-        //}
     }
     #endregion
 }
