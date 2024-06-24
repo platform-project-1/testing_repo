@@ -19,7 +19,7 @@ public class Jumping : MonoBehaviour
     float fallMultiplier = 2f;
 
     [SerializeField, Range(0f, 5f)]
-    float maxJumpTime = 1f, maxJumpHeight = 5f;
+    float maxJumpTime = 0.5f, maxJumpHeight = 1.75f;
 
     //[SerializeField, Range(-100f, 0f)]
     //float gravity = -9.81f;
@@ -48,7 +48,7 @@ public class Jumping : MonoBehaviour
 
     void Start()
     {
-
+        PerformJumpCalc();
     }
 
     void Update()
@@ -84,7 +84,11 @@ public class Jumping : MonoBehaviour
 
     void PerformJumpCalc()
     {
-        
+        /*
+        Performs the calculations needed for Verlet Integration.
+        Should be called in Start() or Awake() for deployment.
+        Call in Update() for testing or debugging.
+        */
         float timeToApex = maxJumpTime / 2;
         jumpGravity = (-2 * maxJumpHeight) / Mathf.Pow(timeToApex, 2);
         jumpVelocity = (2 * maxJumpHeight) / timeToApex;
@@ -92,7 +96,7 @@ public class Jumping : MonoBehaviour
 
     void PerformJump()
     {
-        PerformJumpCalc();
+        
         velocity = rb.velocity;
         velocity.y = jumpVelocity;
         rb.velocity = velocity;
