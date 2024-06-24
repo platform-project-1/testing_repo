@@ -1954,8 +1954,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.14785147, y: 0.0024077448, z: -0.0003599456, w: 0.9890066}
-  m_LocalPosition: {x: -0.014607187, y: 3.5, z: -142.89996}
+  m_LocalRotation: {x: 0.14785153, y: 0.0023979968, z: -0.00035848847, w: 0.9890066}
+  m_LocalPosition: {x: -0.01454767, y: 3.5, z: -142.89996}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2135,8 +2135,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAcceleration: 20
-  target: {fileID: 1049892572}
-  rotateSpeed: 20
 --- !u!114 &1049892570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2176,13 +2174,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1049892568}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71573dbae46efab4ab8619b3b76b7f3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxJumpPhases: 2
-  jumpForce: 2
+  fallMultiplier: 2
+  maxJumpTime: 10
+  maxJumpHeight: 10
 --- !u!54 &1049892574
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2401,7 +2401,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1146655834}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2611686, y: 0.0023500049, z: -0.0006358166, w: 0.9652901}
+  m_LocalRotation: {x: 0.26116863, y: 0.0023404513, z: -0.0006332317, w: 0.9652902}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2904,7 +2904,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1307625710}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.14785147, y: 0.0024077639, z: -0.0003599485, w: 0.9890066}
+  m_LocalRotation: {x: 0.14785151, y: 0.0023979677, z: -0.00035848402, w: 0.98900664}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3166,7 +3166,7 @@ Transform:
   m_GameObject: {fileID: 1329498172}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.014607187, y: 3.5, z: -142.89996}
+  m_LocalPosition: {x: -0.01454767, y: 3.5, z: -142.89996}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3467,8 +3467,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAcceleration: 20
-  target: {fileID: 1336642211}
-  rotateSpeed: 1
 --- !u!114 &1336642214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3482,7 +3480,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxJumpPhases: 2
-  jumpForce: 5
+  fallMultiplier: 2
+  maxJumpTime: 10
+  maxJumpHeight: 10
 --- !u!114 &1336642215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4049,7 +4049,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1786964325}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.34042385, y: 0.0022891178, z: -0.00082877383, w: 0.94026893}
+  m_LocalRotation: {x: 0.3404239, y: 0.0022798039, z: -0.00082540186, w: 0.94026893}
   m_LocalPosition: {x: -0.000000044703484, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

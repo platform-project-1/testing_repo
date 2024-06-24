@@ -12,20 +12,20 @@ public class Movement : MonoBehaviour
     [SerializeField, Range(0f, 100f)]
     float maxAcceleration = 20f;
 
-    [SerializeField]
-    Transform target;
-
     bool sprintPressed;
 
     Vector2 movementInput;
-
     Vector3 velocity;
+
+
 
     #region Basic Functions
     void Awake()
     {
         actionMap = new PlayerInput();
         rb = GetComponent<Rigidbody>();
+
+        //rb.useGravity = false;
 
         actionMap.Movement.Move.started += OnMove;
         actionMap.Movement.Move.performed += OnMove;
@@ -39,6 +39,7 @@ public class Movement : MonoBehaviour
     {
         HandleMoving();
         HandleRotation();
+        //HandleFalling();
     }
     #endregion
 
@@ -65,7 +66,7 @@ public class Movement : MonoBehaviour
     }
     #endregion
 
-    #region Movement and Rotation Functions
+    #region Movement Functions
     void HandleMoving()
     {
         // Determines if sprint speed is applied or not
@@ -91,11 +92,30 @@ public class Movement : MonoBehaviour
     void HandleRotation()
     {
         velocity = rb.velocity;
-        if (velocity.magnitude > 0.01f) 
+        if (velocity.x > 0.01f || velocity.z > 0.01f) 
         {
             Vector3 rotate = new Vector3(velocity.x * Time.deltaTime, 0f, velocity.z * Time.deltaTime);
             transform.rotation = Quaternion.LookRotation(rotate);
         }
     }
+
+    void HandleFalling()
+    {
+        //// FIGURE HOW TO INCREASE FALL SPEED WITHOUT IT BEING TOO MUCH
+        //// LOOK INTO VERLET INTEGRATION
+        //velocity = rb.velocity;
+        //if (velocity.y >= 0)
+        //{
+        //    velocity.y = normalGravity * Time.deltaTime;
+        //}
+        //else
+        //{
+        //    velocity.y = fallingGravity * Time.deltaTime;
+        //}
+        ////velocity.y += Time.deltaTime;
+        //rb.velocity = velocity;
+    }
     #endregion
+
+
 }

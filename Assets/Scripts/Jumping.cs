@@ -9,19 +9,28 @@ public class Jumping : MonoBehaviour
 {
     PlayerInput actionMap;
     Rigidbody rb;
-    Coroutine myCoroutine;
 
     [SerializeField, Range(0, 5)]
     int maxJumpPhases = 2;
 
     private int jumpPhase = 0;
 
-    [SerializeField, Range(0f, 10f)]
-    float jumpForce = 2f;
+    [SerializeField, Range(0f, 100f)]
+    float fallMultiplier = 2f;
+
+    [SerializeField, Range(0f, 100f)]
+    float maxJumpTime = 10f, maxJumpHeight = 10f;
+
+    [SerializeField, Range(-100f, 0f)]
+    float gravity = -9.81f;
+
+    float groundedGravity = -0.05f;
 
     bool jumpPressed;
     bool jumpValid = false;
-    bool onGround;
+    bool isGrounded;
+    bool isFalling;
+    //float gravity;
     Vector3 velocity;
 
     #region Basic Functions
@@ -34,10 +43,16 @@ public class Jumping : MonoBehaviour
         actionMap.Actions.Jump.canceled += OnJump;
     }
 
+    void Update()
+    {
+        Debug.Log($"rb.velocity.y = {rb.velocity.y}");
+    }
 
     void FixedUpdate()
     {
-        CheckJump();
+        ApplyGravity();
+        IsFallingCheck();
+        CheckForJump();
     }
     #endregion
 
@@ -61,77 +76,85 @@ public class Jumping : MonoBehaviour
 
     void PerformJump()
     {
-        velocity = rb.velocity;
-        velocity.y += jumpForce;
-        rb.velocity = velocity;
+        //velocity = rb.velocity;
 
-        jumpPhase++;
-        jumpValid = false;
+        //float timeToApex = (-2 * maxJumpTime) / 2;
+        //gravity = (-2 * maxJumpHeight) / Mathf.Pow(timeToApex, 2);
+        //float jumpVelocity = (2 * maxJumpHeight) / timeToApex;
+        //velocity.y = jumpVelocity;
+
+        //rb.velocity = velocity;
+
+        //jumpPhase++;
+        //jumpValid = false;
     }
 
-    void CheckJump()
+    void CheckForJump()
     {
         //Debug.Log($"jumpPhase = {jumpPhase}");
-        if (jumpValid)
-        {
-            if (jumpPressed)
-            {
-                if (onGround)
-                {
-                    PerformJump();
-                }
-                else if (!onGround &&
-                    (jumpPhase < maxJumpPhases))
-                {
-                    PerformJump();
-                }
-            }
-        }
+        //if (jumpValid && jumpPressed)
+        //{
+        //    if (isGrounded)
+        //    {
+        //        PerformJump();
+        //    }
+        //    else if (!isGrounded &&
+        //        (jumpPhase < maxJumpPhases))
+        //    {
+        //        PerformJump();
+        //    }
+        //}
 
-        if (!jumpValid && !jumpPressed)
-        {
-            jumpValid = true;
-        }
+        //if (!jumpValid && !jumpPressed)
+        //{
+        //    jumpValid = true;
+        //}
     }
 
-    //void CheckJump()
-    //{
-    //    Debug.Log($"jumpPhase = {jumpPhase}");
-    //    if (onGround && jumpPressed)
-    //    {
-    //        PerformJump();
-    //    }
-    //    else if (!onGround && jumpPressed && (jumpPhase <= maxJumpPhases))
-    //    {
-    //        PerformJump();
-    //    }
-    //    //Debug.Log($"onGround = {onGround}");
-    //}
+    void ApplyGravity()
+    {
+        velocity = rb.velocity;
+        
+        float newYVelocity;
+        if (isGrounded)
+        {
+            newYVelocity = groundedGravity;
+        }
+        else if (isFalling)
+        {
+            float previousYVelocity = velocity.y;
+            previousYVelocity = previousYVelocity + (gravity * fallMultiplier * Time.deltaTime);
+            newYVelocity = Mathf.Max((previousYVelocity + velocity.y) * 0.5f, gravity);
+        }
+        else
+        {
+            float previousYVelocity = velocity.y;
+            previousYVelocity = previousYVelocity + (gravity * Time.deltaTime);
+            newYVelocity = (previousYVelocity + velocity.y) * 0.5f;
+        }
+        velocity.y = newYVelocity;
+        rb.velocity = velocity;
+    }
 
-
+    void IsFallingCheck()
+    {
+        isFalling = !isGrounded && !jumpPressed;
+    }
 
     #region Collision Functions
     void OnCollisionEnter(Collision col)
     {
-        onGround = true;
-        jumpPhase = 0;
-        //EvaluateCollision(col);
+        isGrounded = true;
     }
 
     void OnCollisionStay(Collision col)
     {
-        onGround = true;
-        //EvaluateCollision(col);
+        isGrounded = true;
     }
 
     void OnCollisionExit(Collision col)
     {
-        onGround = false;
-    }
-
-    void EvaluateCollision(Collision col)
-    {
-        //Debug.Log($"{col.gameObject.tag}");
+        isGrounded = false;
     }
     #endregion
 }
