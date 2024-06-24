@@ -18,11 +18,11 @@ public class Jumping : MonoBehaviour
     [SerializeField, Range(0f, 100f)]
     float fallMultiplier = 2f;
 
-    [SerializeField, Range(0f, 100f)]
-    float maxJumpTime = 10f, maxJumpHeight = 10f;
+    [SerializeField, Range(0f, 5f)]
+    float maxJumpTime = 1f, maxJumpHeight = 5f;
 
-    [SerializeField, Range(-100f, 0f)]
-    float gravity = -9.81f;
+    //[SerializeField, Range(-100f, 0f)]
+    //float gravity = -9.81f;
 
     float groundedGravity = -0.05f;
 
@@ -30,7 +30,8 @@ public class Jumping : MonoBehaviour
     bool jumpValid = false;
     bool isGrounded;
     bool isFalling;
-    //float gravity;
+    float jumpGravity;
+    float jumpVelocity;
     Vector3 velocity;
 
     #region Basic Functions
@@ -39,13 +40,20 @@ public class Jumping : MonoBehaviour
         actionMap = new PlayerInput();
         rb = GetComponent<Rigidbody>();
 
+        rb.useGravity = false;
+
         actionMap.Actions.Jump.started += OnJump;
         actionMap.Actions.Jump.canceled += OnJump;
     }
 
+    void Start()
+    {
+
+    }
+
     void Update()
     {
-        Debug.Log($"rb.velocity.y = {rb.velocity.y}");
+
     }
 
     void FixedUpdate()
@@ -74,41 +82,43 @@ public class Jumping : MonoBehaviour
     }
     #endregion
 
+    void PerformJumpCalc()
+    {
+        
+        float timeToApex = maxJumpTime / 2;
+        jumpGravity = (-2 * maxJumpHeight) / Mathf.Pow(timeToApex, 2);
+        jumpVelocity = (2 * maxJumpHeight) / timeToApex;
+    }
+
     void PerformJump()
     {
-        //velocity = rb.velocity;
-
-        //float timeToApex = (-2 * maxJumpTime) / 2;
-        //gravity = (-2 * maxJumpHeight) / Mathf.Pow(timeToApex, 2);
-        //float jumpVelocity = (2 * maxJumpHeight) / timeToApex;
-        //velocity.y = jumpVelocity;
-
-        //rb.velocity = velocity;
-
-        //jumpPhase++;
-        //jumpValid = false;
+        PerformJumpCalc();
+        velocity = rb.velocity;
+        velocity.y = jumpVelocity;
+        rb.velocity = velocity;
+        jumpPhase++;
     }
 
     void CheckForJump()
     {
         //Debug.Log($"jumpPhase = {jumpPhase}");
-        //if (jumpValid && jumpPressed)
-        //{
-        //    if (isGrounded)
-        //    {
-        //        PerformJump();
-        //    }
-        //    else if (!isGrounded &&
-        //        (jumpPhase < maxJumpPhases))
-        //    {
-        //        PerformJump();
-        //    }
-        //}
+        if (jumpValid && jumpPressed)
+        {
+            if (isGrounded)
+            {
+                PerformJump();
+            }
+            else if (!isGrounded &&
+                (jumpPhase < maxJumpPhases))
+            {
+                PerformJump();
+            }
+        }
 
-        //if (!jumpValid && !jumpPressed)
-        //{
-        //    jumpValid = true;
-        //}
+        if (!jumpValid && !jumpPressed)
+        {
+            jumpValid = true;
+        }
     }
 
     void ApplyGravity()
@@ -123,13 +133,13 @@ public class Jumping : MonoBehaviour
         else if (isFalling)
         {
             float previousYVelocity = velocity.y;
-            previousYVelocity = previousYVelocity + (gravity * fallMultiplier * Time.deltaTime);
-            newYVelocity = Mathf.Max((previousYVelocity + velocity.y) * 0.5f, gravity);
+            velocity.y = velocity.y + (jumpGravity * fallMultiplier * Time.deltaTime);
+            newYVelocity = Mathf.Max((previousYVelocity + velocity.y) * 0.5f, jumpGravity);
         }
         else
         {
             float previousYVelocity = velocity.y;
-            previousYVelocity = previousYVelocity + (gravity * Time.deltaTime);
+            velocity.y = velocity.y + (jumpGravity * Time.deltaTime);
             newYVelocity = (previousYVelocity + velocity.y) * 0.5f;
         }
         velocity.y = newYVelocity;
@@ -145,11 +155,13 @@ public class Jumping : MonoBehaviour
     void OnCollisionEnter(Collision col)
     {
         isGrounded = true;
+        jumpValid = true;
     }
 
     void OnCollisionStay(Collision col)
     {
         isGrounded = true;
+        jumpValid = true;
     }
 
     void OnCollisionExit(Collision col)
