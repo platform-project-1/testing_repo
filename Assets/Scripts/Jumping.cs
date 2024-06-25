@@ -27,12 +27,15 @@ public class Jumping : MonoBehaviour
     float groundedGravity = -0.05f;
 
     bool jumpPressed;
-    bool jumpValid = false;
+    //bool jumpValid = false;
+    private bool isJumping;
+    private bool jumpValid = false;
     bool isGrounded;
     bool isFalling;
     float jumpGravity;
     float jumpVelocity;
     Vector3 velocity;
+    Coroutine jumpTime;
 
     #region Basic Functions
     void Awake()
@@ -53,7 +56,7 @@ public class Jumping : MonoBehaviour
 
     void Update()
     {
-
+        //Debug.Log($"jumpPhase = {jumpPhase}");
     }
 
     void FixedUpdate()
@@ -79,6 +82,10 @@ public class Jumping : MonoBehaviour
     void OnJump(InputAction.CallbackContext context)
     {
         jumpPressed = context.ReadValueAsButton();
+        //if (jumpPressed)
+        //{
+        //    jumpPhase++;
+        //}
     }
     #endregion
 
@@ -88,35 +95,55 @@ public class Jumping : MonoBehaviour
         Performs the calculations needed for Verlet Integration.
         Should be called in Start() or Awake() for deployment.
         Call in Update() for testing or debugging.
-        */
+         */
         float timeToApex = maxJumpTime / 2;
         jumpGravity = (-2 * maxJumpHeight) / Mathf.Pow(timeToApex, 2);
         jumpVelocity = (2 * maxJumpHeight) / timeToApex;
     }
 
-    void PerformJump()
+    //IEnumerator TestJumpButtonRelease()
+    //{
+
+    //    Debug.Log("Before yield");
+    //    yield return new WaitUntil(() => jumpPressed == false);
+    //    Debug.Log("After yield");
+    //    jumpPhase++;
+    //}
+    //IEnumerator JumpPress()
+    //{
+        // USE TO KEEP TRACK OF BUTTON PRESS AND RELEASE FOR JUMP PHASE
+    //}
+
+    IEnumerator JumpTime()
     {
-        
+        isJumping = true;
         velocity = rb.velocity;
         velocity.y = jumpVelocity;
         rb.velocity = velocity;
+        yield return new WaitForSeconds(maxJumpTime);
+        isJumping = false;
         jumpPhase++;
     }
 
     void CheckForJump()
     {
-        //Debug.Log($"jumpPhase = {jumpPhase}");
-        if (jumpValid && jumpPressed)
+        if (jumpPressed && jumpValid)
         {
             if (isGrounded)
             {
-                PerformJump();
+                jumpTime = StartCoroutine(JumpTime());
             }
             else if (!isGrounded &&
                 (jumpPhase < maxJumpPhases))
             {
-                PerformJump();
+                jumpTime = StartCoroutine(JumpTime());
             }
+        }
+
+        if (isJumping && !jumpPressed)
+        {
+            StopCoroutine(jumpTime);
+            jumpValid = false;
         }
 
         if (!jumpValid && !jumpPressed)
@@ -127,6 +154,7 @@ public class Jumping : MonoBehaviour
 
     void ApplyGravity()
     {
+        
         velocity = rb.velocity;
         
         float newYVelocity;
@@ -152,20 +180,19 @@ public class Jumping : MonoBehaviour
 
     void IsFallingCheck()
     {
-        isFalling = !isGrounded && !jumpPressed;
+        isFalling = (!isGrounded && !jumpPressed) || rb.velocity.y <= 0.0f;
     }
 
     #region Collision Functions
     void OnCollisionEnter(Collision col)
     {
         isGrounded = true;
-        jumpValid = true;
+        jumpPhase = 0;
     }
 
     void OnCollisionStay(Collision col)
     {
         isGrounded = true;
-        jumpValid = true;
     }
 
     void OnCollisionExit(Collision col)
