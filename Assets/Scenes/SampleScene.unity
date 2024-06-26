@@ -702,7 +702,7 @@ GameObject:
   - component: {fileID: 469432447}
   - component: {fileID: 469432446}
   - component: {fileID: 469432445}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: wall
   m_Icon: {fileID: 0}
@@ -2382,7 +2382,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1146655834}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.26116976, y: 0.000048787024, z: -0.000013199822, w: 0.9652929}
+  m_LocalRotation: {x: 0.26116976, y: 0.000048820242, z: -0.00001320881, w: 0.9652929}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3673,7 +3673,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1786964325}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.34042525, y: 0.00004755478, z: -0.000017217202, w: 0.9402716}
+  m_LocalRotation: {x: 0.34042525, y: 0.000047522422, z: -0.000017205488, w: 0.9402716}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

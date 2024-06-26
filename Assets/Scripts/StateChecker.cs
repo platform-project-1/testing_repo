@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class StateChecker : MonoBehaviour
@@ -21,11 +22,13 @@ public class StateChecker : MonoBehaviour
 
         var rayOrigin = transform.position + rayOffset;
         hitData.hitFound = Physics.Raycast(rayOrigin, transform.forward, out hitData.hitInfo, rayLength, wallLayer);
-        //Debug.DrawRay(rayOrigin, transform.forward * rayLength, (hitData.hitFound) ? Color.red : Color.green);
+
+        Debug.DrawRay(rayOrigin, transform.forward * rayLength, (hitData.hitFound) ? Color.red : Color.green);
 
         if (hitData.hitFound)
         {
-            //Debug.Log($"hitData.hitInfo.transform.name = {hitData.hitInfo.transform.name}");
+            hitData.targetHeight = hitData.hitInfo.transform.gameObject.GetComponent<Collider>().bounds.size;
+            Debug.Log($"Target Height = {hitData.targetHeight}");
         }
     }
 }
@@ -34,4 +37,5 @@ public struct WallData
 {
     public bool hitFound;
     public RaycastHit hitInfo;
+    public Vector3 targetHeight;
 }
