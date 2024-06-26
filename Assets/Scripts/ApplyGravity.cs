@@ -16,10 +16,13 @@ public class ApplyGravity : MonoBehaviour
 
     float groundedGravity = -0.05f;
 
+    [HideInInspector]
     public bool isGrounded;
     bool isFalling = false;
     bool jumpPressed = false;
     float jumpGravity;
+
+    [HideInInspector]
     public float jumpVelocity;
     Vector3 velocity;
 
@@ -104,18 +107,35 @@ public class ApplyGravity : MonoBehaviour
     void OnCollisionEnter(Collision col)
     {
         //Debug.Log($"enter col.gameObject.tag = {col.gameObject.tag}");
-        isGrounded = true;
+        if (col.gameObject.tag == "ground")
+        {
+            isGrounded = true;
+        }
+        else if (col.gameObject.tag == "wall")
+        {
+            isFalling = true;
+        }
     }
 
     void OnCollisionStay(Collision col)
     {
         //Debug.Log($"stay col.gameObject.tag = {col.gameObject.tag}");
-        isGrounded = true;
+        if (col.gameObject.tag == "ground")
+        {
+            isGrounded = true;
+        }
+        else if (col.gameObject.tag == "wall")
+        {
+            isFalling = true;
+        }
     }
 
     void OnCollisionExit(Collision col)
     {
-        isGrounded = false;
+        if (col.gameObject.tag == "ground")
+        {
+            isGrounded = false;
+        }
     }
     #endregion
 }
