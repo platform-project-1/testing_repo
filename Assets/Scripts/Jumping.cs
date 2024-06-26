@@ -13,7 +13,7 @@ public class Jumping : MonoBehaviour
     [SerializeField, Range(0, 5)]
     int maxJumpPhases = 2;
 
-    private int jumpPhase = 0;
+    private int jumpPhase = 1;
 
     [SerializeField, Range(0f, 100f)]
     float fallMultiplier = 2f;
@@ -21,21 +21,18 @@ public class Jumping : MonoBehaviour
     [SerializeField, Range(0f, 5f)]
     float maxJumpTime = 0.5f, maxJumpHeight = 1.75f;
 
-    //[SerializeField, Range(-100f, 0f)]
-    //float gravity = -9.81f;
-
     float groundedGravity = -0.05f;
 
-    bool jumpPressed;
-    //bool jumpValid = false;
-    private bool isJumping;
-    private bool jumpValid = false;
+    bool jumpPressed = false;
+    bool initialJumpPerformed = false;
+    bool subsequentJumpsValid = false;
+    bool breakEarly = false;
+    bool isJumping = false;
     bool isGrounded;
     bool isFalling;
     float jumpGravity;
     float jumpVelocity;
     Vector3 velocity;
-    Coroutine jumpTime;
 
     #region Basic Functions
     void Awake()
@@ -52,11 +49,6 @@ public class Jumping : MonoBehaviour
     void Start()
     {
         PerformJumpCalc();
-    }
-
-    void Update()
-    {
-        //Debug.Log($"jumpPhase = {jumpPhase}");
     }
 
     void FixedUpdate()
@@ -82,10 +74,10 @@ public class Jumping : MonoBehaviour
     void OnJump(InputAction.CallbackContext context)
     {
         jumpPressed = context.ReadValueAsButton();
-        //if (jumpPressed)
-        //{
-        //    jumpPhase++;
-        //}
+        if (jumpPressed)
+        {
+            jumpPhase++;
+        }
     }
     #endregion
 
@@ -100,55 +92,73 @@ public class Jumping : MonoBehaviour
         jumpGravity = (-2 * maxJumpHeight) / Mathf.Pow(timeToApex, 2);
         jumpVelocity = (2 * maxJumpHeight) / timeToApex;
     }
-
-    //IEnumerator TestJumpButtonRelease()
-    //{
-
-    //    Debug.Log("Before yield");
-    //    yield return new WaitUntil(() => jumpPressed == false);
-    //    Debug.Log("After yield");
-    //    jumpPhase++;
-    //}
-    //IEnumerator JumpPress()
-    //{
-        // USE TO KEEP TRACK OF BUTTON PRESS AND RELEASE FOR JUMP PHASE
-    //}
-
-    IEnumerator JumpTime()
+    IEnumerator PerformInitialJump()
     {
-        isJumping = true;
+        // Logic to add velocity to initial jump.
         velocity = rb.velocity;
         velocity.y = jumpVelocity;
         rb.velocity = velocity;
-        yield return new WaitForSeconds(maxJumpTime);
+        
+        for (float timer = maxJumpTime; timer >= 0; timer -= Time.deltaTime)
+        {
+            isJumping = true;
+            if (breakEarly)
+            {
+                isJumping = false;
+                yield break;
+            }
+        }
+        yield return null;
+        initialJumpPerformed = true;
         isJumping = false;
-        jumpPhase++;
+    }
+    
+    IEnumerator PerformSubsequentJump()
+    {
+        // Logic to add velocity to subsequent jumps.
+        velocity = rb.velocity;
+        velocity.y = jumpVelocity;
+        rb.velocity = velocity;
+
+        isJumping = true;
+        subsequentJumpsValid = false;
+        for (float timer = maxJumpTime; timer >= 0; timer -= Time.deltaTime)
+        {
+            if (breakEarly)
+            {
+                isJumping = false;
+                yield break;
+            }
+        }
+        yield return null;
     }
 
     void CheckForJump()
     {
-        if (jumpPressed && jumpValid)
+        if (jumpPressed)
         {
-            if (isGrounded)
+            if (isGrounded) 
             {
-                jumpTime = StartCoroutine(JumpTime());
+                StartCoroutine(PerformInitialJump());
             }
-            else if (!isGrounded &&
-                (jumpPhase < maxJumpPhases))
+            
+            if (initialJumpPerformed)
             {
-                jumpTime = StartCoroutine(JumpTime());
+                if (subsequentJumpsValid && (jumpPhase <= maxJumpPhases))
+                {
+                    StartCoroutine(PerformSubsequentJump());
+                }
             }
+        }
+
+        if (initialJumpPerformed && !jumpPressed)
+        {
+            subsequentJumpsValid = true;
         }
 
         if (isJumping && !jumpPressed)
         {
-            StopCoroutine(jumpTime);
-            jumpValid = false;
-        }
-
-        if (!jumpValid && !jumpPressed)
-        {
-            jumpValid = true;
+            breakEarly = true;
         }
     }
 
@@ -187,6 +197,9 @@ public class Jumping : MonoBehaviour
     void OnCollisionEnter(Collision col)
     {
         isGrounded = true;
+        breakEarly = false;
+        initialJumpPerformed = false;
+        subsequentJumpsValid = false;
         jumpPhase = 0;
     }
 
