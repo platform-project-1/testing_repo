@@ -58,6 +58,9 @@ public class Debugging : MonoBehaviour
 
     [SerializeField]
     bool drawLineOn = false;
+    
+    [SerializeField]
+    bool drawRayOn = false;
     void OnDrawGizmos()
     {
         if (drawLineOn)
@@ -67,6 +70,14 @@ public class Debugging : MonoBehaviour
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawRay(position, direction * distance);
+        }
+
+        if (drawRayOn)
+        {
+            // Draws a 5 unit long red line in front of the object
+            Gizmos.color = Color.red;
+            Vector3 direction = transform.TransformDirection(Vector3.forward) * 5;
+            Gizmos.DrawRay(transform.position, direction);
         }
     }
     #endregion
