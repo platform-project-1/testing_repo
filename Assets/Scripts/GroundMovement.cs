@@ -4,9 +4,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Movement : MonoBehaviour
+public class GroundMovement : MonoBehaviour
 {
     PlayerInput actionMap;
+    Jumping jumping;
     Rigidbody rb;
 
     [SerializeField, Range(0f, 100f)]
@@ -17,12 +18,11 @@ public class Movement : MonoBehaviour
     Vector2 movementInput;
     Vector3 velocity;
 
-
-
     #region Basic Functions
     void Awake()
     {
         actionMap = new PlayerInput();
+        jumping = GetComponent<Jumping>();
         rb = GetComponent<Rigidbody>();
 
         //rb.useGravity = false;
@@ -39,7 +39,7 @@ public class Movement : MonoBehaviour
     {
         HandleMoving();
         HandleRotation();
-        //HandleFalling();
+        //Debug.Log($"rb.velocity = {rb.velocity}");
     }
     #endregion
 
@@ -65,6 +65,11 @@ public class Movement : MonoBehaviour
         sprintPressed = context.ReadValueAsButton();
     }
     #endregion
+
+    void SwitchToClimbing()
+    {
+
+    }
 
     #region Movement Functions
     void HandleMoving()
@@ -98,24 +103,36 @@ public class Movement : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(rotate);
         }
     }
-
-    void HandleFalling()
-    {
-        //// FIGURE HOW TO INCREASE FALL SPEED WITHOUT IT BEING TOO MUCH
-        //// LOOK INTO VERLET INTEGRATION
-        //velocity = rb.velocity;
-        //if (velocity.y >= 0)
-        //{
-        //    velocity.y = normalGravity * Time.deltaTime;
-        //}
-        //else
-        //{
-        //    velocity.y = fallingGravity * Time.deltaTime;
-        //}
-        ////velocity.y += Time.deltaTime;
-        //rb.velocity = velocity;
-    }
     #endregion
 
+    #region Collision Functions
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag == "wall")
+        {
+            jumping.enabled = false;
+        }
+        else if (col.gameObject.tag == "ground")
+        {
+            jumping.enabled = true;
+        }
+    }
 
+    void OnCollisionStay(Collision col)
+    {
+        if (col.gameObject.tag == "wall")
+        {
+            jumping.enabled = false;
+        }
+        else if (col.gameObject.tag == "ground")
+        {
+            jumping.enabled = true;
+        }
+    }
+
+    void OnCollisionExit(Collision col)
+    {
+        
+    }
+    #endregion
 }
