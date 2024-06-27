@@ -35,11 +35,6 @@ public class Jumping : MonoBehaviour
         actionMap.Actions.Jump.started += OnJump;
         actionMap.Actions.Jump.canceled += OnJump;
     }
-
-    void FixedUpdate()
-    {
-        CheckForJump();
-    }
     #endregion
 
     #region Input Functions
@@ -70,9 +65,10 @@ public class Jumping : MonoBehaviour
         velocity = rb.velocity;
         velocity.y = gravityScript.jumpVelocity;
         rb.velocity = velocity;
-
+        
         for (float timer = gravityScript.maxJumpTime; timer >= 0; timer -= Time.deltaTime)
         {
+            //Debug.Log($"rb.velocity = {rb.velocity}");
             isJumping = true;
             if (breakEarly)
             {
@@ -83,8 +79,10 @@ public class Jumping : MonoBehaviour
         yield return null;
         initialJumpPerformed = true;
         isJumping = false;
+        
     }
-    
+
+
     IEnumerator PerformSubsequentJump()
     {
         // Logic to add velocity to subsequent jumps.
@@ -94,8 +92,10 @@ public class Jumping : MonoBehaviour
 
         isJumping = true;
         subsequentJumpsValid = false;
+        
         for (float timer = gravityScript.maxJumpTime; timer >= 0; timer -= Time.deltaTime)
         {
+            
             if (breakEarly)
             {
                 isJumping = false;
@@ -105,7 +105,7 @@ public class Jumping : MonoBehaviour
         yield return null;
     }
 
-    void CheckForJump()
+    public void CheckForJump()
     {
         if (jumpPressed)
         {
@@ -136,6 +136,14 @@ public class Jumping : MonoBehaviour
 
     #region Collision Functions
     void OnCollisionEnter(Collision col)
+    {
+        breakEarly = false;
+        initialJumpPerformed = false;
+        subsequentJumpsValid = false;
+        jumpPhase = 0;
+    }
+
+    void OnCollisionStay(Collision col)
     {
         breakEarly = false;
         initialJumpPerformed = false;

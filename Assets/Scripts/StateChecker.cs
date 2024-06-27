@@ -5,18 +5,37 @@ using UnityEngine;
 
 public class StateChecker : MonoBehaviour
 {
+    ApplyGravity applyGravity;
+    Climbing climbing;
+    GroundMovement groundMovement;
+    Jumping jumping;
+
     [SerializeField, Range(0f, 30f)]
     float rayLength = 1f;
 
     Vector3 rayOffset = new Vector3(0f, 0.5f, 0f);
     public LayerMask wallLayer;
 
-    void Update()
+    void Awake()
     {
-        CheckForWall();
+        applyGravity = GetComponent<ApplyGravity>();
+        climbing = GetComponent<Climbing>();
+        groundMovement = GetComponent<GroundMovement>();
+        jumping = GetComponent<Jumping>();
     }
 
-    void CheckForWall()
+    void Update()
+    {
+        if (CheckForWall())
+        {
+            applyGravity.enabled = false;
+            groundMovement.enabled = false;
+            jumping.enabled = false;
+            climbing.enabled = true;
+        }
+    }
+
+    bool CheckForWall()
     {
         var hitData = new WallData();
 
@@ -27,9 +46,11 @@ public class StateChecker : MonoBehaviour
 
         if (hitData.hitFound)
         {
-            hitData.targetHeight = hitData.hitInfo.transform.gameObject.GetComponent<Collider>().bounds.size;
-            Debug.Log($"Target Height = {hitData.targetHeight}");
+            return true;
+            //hitData.targetHeight = hitData.hitInfo.transform.gameObject.GetComponent<Collider>().bounds.size;
+            //Debug.Log($"Target Height = {hitData.targetHeight}");
         }
+        return false;
     }
 }
 

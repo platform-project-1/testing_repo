@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class ApplyGravity : MonoBehaviour
 {
     PlayerInput actionMap;
+    Jumping jumping;
     Rigidbody rb;
 
     [SerializeField, Range(1f, 10f)]
@@ -29,6 +30,7 @@ public class ApplyGravity : MonoBehaviour
     void Awake()
     {
         actionMap = new PlayerInput();
+        jumping = GetComponent<Jumping>();
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
     }
@@ -42,6 +44,10 @@ public class ApplyGravity : MonoBehaviour
     {
         HandleGravity();
         IsFallingCheck();
+        if (jumping != null)
+        {
+            jumping.CheckForJump();
+        }
     }
 
     #region Input Functions
@@ -132,10 +138,7 @@ public class ApplyGravity : MonoBehaviour
 
     void OnCollisionExit(Collision col)
     {
-        if (col.gameObject.tag == "ground")
-        {
-            isGrounded = false;
-        }
+        isGrounded = false;
     }
     #endregion
 }

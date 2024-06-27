@@ -5,10 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Climbing : MonoBehaviour
 {
-    [SerializeField]
-    private float speed = 5f;
-
-
+    //[SerializeField]
+    //float speed = 5f;
 
     PlayerInput actionMap;
     Vector2 movementInput;
@@ -38,7 +36,7 @@ public class Climbing : MonoBehaviour
 
     void FixedUpdate()
     {
-        
+        SquareToCircle(movementInput);
     }
     #endregion
 
@@ -60,5 +58,9 @@ public class Climbing : MonoBehaviour
     #endregion
 
 
+    Vector2 SquareToCircle(Vector2 input)
+    {
+        return (input.sqrMagnitude >= 1f) ? input.normalized : input;
+    }
 }
 
