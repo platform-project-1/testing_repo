@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ApplyGravity : MonoBehaviour
+public class CustomGravity : MonoBehaviour
 {
     PlayerInput actionMap;
     Jumping jumping;

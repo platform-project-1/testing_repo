@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 public class Jumping : MonoBehaviour
 {
-    ApplyGravity gravityScript;
+    CustomGravity gravityScript;
     PlayerInput actionMap;
     Rigidbody rb;
 
@@ -26,7 +26,7 @@ public class Jumping : MonoBehaviour
     #region Basic Functions
     void Awake()
     {
-        gravityScript = GetComponent<ApplyGravity>();
+        gravityScript = GetComponent<CustomGravity>();
         actionMap = new PlayerInput();
 
         rb = GetComponent<Rigidbody>();

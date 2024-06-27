@@ -5,7 +5,15 @@ using UnityEngine;
 
 public class StateChecker : MonoBehaviour
 {
-    ApplyGravity applyGravity;
+    public enum PlayerState
+    {
+        GROUNDED,
+        CLIMBING
+    }
+
+    PlayerState state;
+
+    CustomGravity applyGravity;
     Climbing climbing;
     GroundMovement groundMovement;
     Jumping jumping;
@@ -18,7 +26,7 @@ public class StateChecker : MonoBehaviour
 
     void Awake()
     {
-        applyGravity = GetComponent<ApplyGravity>();
+        applyGravity = GetComponent<CustomGravity>();
         climbing = GetComponent<Climbing>();
         groundMovement = GetComponent<GroundMovement>();
         jumping = GetComponent<Jumping>();
@@ -28,10 +36,19 @@ public class StateChecker : MonoBehaviour
     {
         if (CheckForWall())
         {
+            state = PlayerState.CLIMBING;
             applyGravity.enabled = false;
             groundMovement.enabled = false;
             jumping.enabled = false;
             climbing.enabled = true;
+        }
+        else
+        {
+            state = PlayerState.GROUNDED;
+            applyGravity.enabled = true;
+            groundMovement.enabled = true;
+            jumping.enabled = true;
+            climbing.enabled = false;
         }
     }
 
@@ -52,6 +69,8 @@ public class StateChecker : MonoBehaviour
         }
         return false;
     }
+
+
 }
 
 public struct WallData

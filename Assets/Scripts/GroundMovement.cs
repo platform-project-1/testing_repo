@@ -25,8 +25,6 @@ public class GroundMovement : MonoBehaviour
         jumping = GetComponent<Jumping>();
         rb = GetComponent<Rigidbody>();
 
-        //rb.useGravity = false;
-
         actionMap.Movement.Move.started += OnMove;
         actionMap.Movement.Move.performed += OnMove;
         actionMap.Movement.Move.canceled += OnMove;
@@ -39,7 +37,6 @@ public class GroundMovement : MonoBehaviour
     {
         HandleMoving();
         HandleRotation();
-        //Debug.Log($"rb.velocity = {rb.velocity}");
     }
     #endregion
 
@@ -57,7 +54,6 @@ public class GroundMovement : MonoBehaviour
     void OnMove(InputAction.CallbackContext context)
     {
         movementInput = context.ReadValue<Vector2>();
-        //movementInput = Vector2.ClampMagnitude(movementInput, 1f);
     }
 
     void OnSprint(InputAction.CallbackContext context)
@@ -65,11 +61,6 @@ public class GroundMovement : MonoBehaviour
         sprintPressed = context.ReadValueAsButton();
     }
     #endregion
-
-    void SwitchToClimbing()
-    {
-
-    }
 
     #region Movement Functions
     void HandleMoving()
