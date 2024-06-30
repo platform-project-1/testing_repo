@@ -19,7 +19,8 @@ public class CustomGravity : MonoBehaviour
 
     [HideInInspector]
     public bool isGrounded;
-    bool isFalling = false;
+    [HideInInspector]
+    public bool isFalling = false;
     bool jumpPressed = false;
     float jumpGravity;
 
@@ -116,6 +117,7 @@ public class CustomGravity : MonoBehaviour
         if (col.gameObject.tag == "ground")
         {
             isGrounded = true;
+            isFalling = false;
         }
         else if (col.gameObject.tag == "wall")
         {
@@ -129,6 +131,7 @@ public class CustomGravity : MonoBehaviour
         if (col.gameObject.tag == "ground")
         {
             isGrounded = true;
+            isFalling = false;
         }
         else if (col.gameObject.tag == "wall")
         {

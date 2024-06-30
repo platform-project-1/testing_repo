@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 
 public class Jumping : MonoBehaviour
 {
+    Animator animator;
     CustomGravity gravityScript;
     PlayerInput actionMap;
     Rigidbody rb;
@@ -16,7 +17,8 @@ public class Jumping : MonoBehaviour
 
     private int jumpPhase = 1;
 
-    bool jumpPressed = false;
+    [HideInInspector]
+    public bool jumpPressed = false;
     bool initialJumpPerformed = false;
     bool subsequentJumpsValid = false;
     bool breakEarly = false;
@@ -28,6 +30,7 @@ public class Jumping : MonoBehaviour
     {
         gravityScript = GetComponent<CustomGravity>();
         actionMap = new PlayerInput();
+        animator = GetComponent<Animator>();
 
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;

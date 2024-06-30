@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 
 public class GroundMovement : MonoBehaviour
 {
-    Animator animator;
     PlayerInput actionMap;
     Jumping jumping;
     Rigidbody rb;
@@ -16,20 +15,16 @@ public class GroundMovement : MonoBehaviour
 
     bool boostPressed;
 
-    Vector2 movementInput;
+    [HideInInspector]
+    public Vector2 movementInput;
     Vector3 velocity;
-
-    int moveMag;
 
     #region Basic Functions
     void Awake()
     {
         actionMap = new PlayerInput();
-        animator = GetComponent<Animator>();
         jumping = GetComponent<Jumping>();
         rb = GetComponent<Rigidbody>();
-
-        moveMag = Animator.StringToHash("MoveMag");
 
         actionMap.Movement.Move.started += OnMove;
         actionMap.Movement.Move.performed += OnMove;
@@ -43,7 +38,6 @@ public class GroundMovement : MonoBehaviour
     {
         HandleMoving();
         HandleRotation();
-        HandleAnimation();
     }
     #endregion
 
@@ -100,11 +94,6 @@ public class GroundMovement : MonoBehaviour
             Vector3 rotate = new Vector3(velocity.x * Time.deltaTime, 0f, velocity.z * Time.deltaTime);
             transform.rotation = Quaternion.LookRotation(rotate);
         }
-    }
-
-    void HandleAnimation()
-    {
-        animator.SetFloat(moveMag, Mathf.Abs(movementInput.magnitude));
     }
     #endregion
 
