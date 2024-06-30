@@ -11,7 +11,7 @@ public class StateChecker : MonoBehaviour
         CLIMBING
     }
 
-    PlayerState state;
+    public PlayerState state;
 
     CustomGravity applyGravity;
     Climbing climbing;

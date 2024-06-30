@@ -13,7 +13,8 @@ public class Climbing : MonoBehaviour
 
     bool boostActive;
     PlayerInput actionMap;
-    Vector2 movementInput;
+    [HideInInspector]
+    public Vector2 movementInput;
     Vector2 input;
 
     Rigidbody rb;
@@ -84,7 +85,7 @@ public class Climbing : MonoBehaviour
     void OnBoost(InputAction.CallbackContext context)
     {
         boostActive = context.ReadValueAsButton();
-        Debug.Log($"boostActive = {boostActive}");
+        //Debug.Log($"boostActive = {boostActive}");
     }
     #endregion
 
