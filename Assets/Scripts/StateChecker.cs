@@ -13,6 +13,7 @@ public class StateChecker : MonoBehaviour
 
     public PlayerState state;
 
+    BoxCollider boxCollider;
     CustomGravity applyGravity;
     Climbing climbing;
     GroundMovement groundMovement;
@@ -24,9 +25,12 @@ public class StateChecker : MonoBehaviour
     Vector3 rayOffset = new Vector3(0f, 0.5f, 0f);
     public LayerMask wallLayer;
 
+    private bool initialRotations = false;
+
     void Awake()
     {
         applyGravity = GetComponent<CustomGravity>();
+        boxCollider = GetComponent<BoxCollider>();
         climbing = GetComponent<Climbing>();
         groundMovement = GetComponent<GroundMovement>();
         jumping = GetComponent<Jumping>();
@@ -38,18 +42,32 @@ public class StateChecker : MonoBehaviour
         {
             state = PlayerState.CLIMBING;
             applyGravity.enabled = false;
+            boxCollider.enabled = false;
+            climbing.enabled = true;
             groundMovement.enabled = false;
             jumping.enabled = false;
-            climbing.enabled = true;
         }
         else
         {
             state = PlayerState.GROUNDED;
             applyGravity.enabled = true;
+            boxCollider.enabled = true;
+            climbing.enabled = false;
             groundMovement.enabled = true;
             jumping.enabled = true;
-            climbing.enabled = false;
         }
+    }
+
+    void SetClimbingRotation()
+    {
+        Quaternion target = Quaternion.Euler(-90f, 0f, 0f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime);
+    }
+
+    void SetStandardRotation() 
+    {
+        Quaternion target = Quaternion.Euler(0f, 0f, 0f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime);
     }
 
     bool CheckForWall()
@@ -63,6 +81,7 @@ public class StateChecker : MonoBehaviour
 
         if (hitData.hitFound)
         {
+            //SetClimbingRotation();
             return true;
             //hitData.targetHeight = hitData.hitInfo.transform.gameObject.GetComponent<Collider>().bounds.size;
             //Debug.Log($"Target Height = {hitData.targetHeight}");

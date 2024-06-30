@@ -37,6 +37,12 @@ public class Climbing : MonoBehaviour
         actionMap.Actions.Boost.canceled += OnBoost;
     }
 
+    void Start()
+    {
+        Quaternion target = Quaternion.Euler(-90f, 0f, 0f);
+        transform.localRotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime);
+    }
+
     void Update()
     {
         input = SquareToCircle(movementInput);

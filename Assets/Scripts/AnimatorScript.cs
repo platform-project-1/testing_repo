@@ -40,8 +40,6 @@ public class AnimatorScript : MonoBehaviour
 
     void CheckAnimation()
     {
-        
-
         if (stateChecker.state == StateChecker.PlayerState.GROUNDED)
         {
             float input = groundMovement.movementInput.magnitude;
