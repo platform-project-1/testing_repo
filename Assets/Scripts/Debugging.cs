@@ -61,6 +61,10 @@ public class Debugging : MonoBehaviour
     
     [SerializeField]
     bool drawRayOn = false;
+
+    [SerializeField]
+    bool drawCrossPattern = false;
+
     void OnDrawGizmos()
     {
         if (drawLineOn)
@@ -78,6 +82,31 @@ public class Debugging : MonoBehaviour
             Gizmos.color = Color.red;
             Vector3 direction = transform.TransformDirection(Vector3.forward) * 5;
             Gizmos.DrawRay(transform.position, direction);
+        }
+
+        if (drawCrossPattern)
+        {
+            // Check walls in a cross pattern
+            Vector3 offset = transform.TransformDirection(Vector2.one * 0.5f);
+            Vector3 checkDirection = Vector3.zero;
+            int k = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawRay(transform.position + offset, transform.forward);
+                k++;
+                //RaycastHit checkHit;
+                //if (Physics.Raycast(transform.position + offset,
+                //                    transform.forward,
+                //                    out checkHit))
+                //{
+                //    checkDirection += checkHit.normal;
+                //    k++;
+                //}
+                // Rotate Offset by 90 degrees
+                offset = Quaternion.AngleAxis(90f, transform.forward) * offset;
+            }
+            //checkDirection /= k;
         }
     }
     #endregion

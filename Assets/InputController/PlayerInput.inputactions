@@ -89,7 +89,7 @@
             "id": "2973df6a-23dd-4fcd-a82b-32d95857309a",
             "actions": [
                 {
-                    "name": "Sprint",
+                    "name": "Boost",
                     "type": "Button",
                     "id": "b3cd7a9d-dcff-4071-91ee-189e39d8ecce",
                     "expectedControlType": "Button",
@@ -115,7 +115,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Sprint",
+                    "action": "Boost",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -126,7 +126,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Sprint",
+                    "action": "Boost",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -137,7 +137,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Sprint",
+                    "action": "Boost",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

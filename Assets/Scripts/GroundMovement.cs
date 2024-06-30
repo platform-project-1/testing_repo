@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class GroundMovement : MonoBehaviour
 {
+    Animator animator;
     PlayerInput actionMap;
     Jumping jumping;
     Rigidbody rb;
@@ -13,30 +14,36 @@ public class GroundMovement : MonoBehaviour
     [SerializeField, Range(0f, 100f)]
     float maxAcceleration = 20f;
 
-    bool sprintPressed;
+    bool boostPressed;
 
     Vector2 movementInput;
     Vector3 velocity;
+
+    int moveMag;
 
     #region Basic Functions
     void Awake()
     {
         actionMap = new PlayerInput();
+        animator = GetComponent<Animator>();
         jumping = GetComponent<Jumping>();
         rb = GetComponent<Rigidbody>();
+
+        moveMag = Animator.StringToHash("MoveMag");
 
         actionMap.Movement.Move.started += OnMove;
         actionMap.Movement.Move.performed += OnMove;
         actionMap.Movement.Move.canceled += OnMove;
-        actionMap.Actions.Sprint.started += OnSprint;
-        actionMap.Actions.Sprint.performed += OnSprint;
-        actionMap.Actions.Sprint.canceled += OnSprint;
+        actionMap.Actions.Boost.started += OnBoost;
+        actionMap.Actions.Boost.performed += OnBoost;
+        actionMap.Actions.Boost.canceled += OnBoost;
     }
 
     void FixedUpdate()
     {
         HandleMoving();
         HandleRotation();
+        HandleAnimation();
     }
     #endregion
 
@@ -56,9 +63,9 @@ public class GroundMovement : MonoBehaviour
         movementInput = context.ReadValue<Vector2>();
     }
 
-    void OnSprint(InputAction.CallbackContext context)
+    void OnBoost(InputAction.CallbackContext context)
     {
-        sprintPressed = context.ReadValueAsButton();
+        boostPressed = context.ReadValueAsButton();
     }
     #endregion
 
@@ -67,7 +74,7 @@ public class GroundMovement : MonoBehaviour
     {
         // Determines if sprint speed is applied or not
         float sprint =
-            sprintPressed ? 2f : 1f;
+            boostPressed ? 2f : 1f;
 
         // Getting camera info
         Vector3 forward = Camera.main.transform.forward;
@@ -93,6 +100,11 @@ public class GroundMovement : MonoBehaviour
             Vector3 rotate = new Vector3(velocity.x * Time.deltaTime, 0f, velocity.z * Time.deltaTime);
             transform.rotation = Quaternion.LookRotation(rotate);
         }
+    }
+
+    void HandleAnimation()
+    {
+        animator.SetFloat(moveMag, Mathf.Abs(movementInput.magnitude));
     }
     #endregion
 

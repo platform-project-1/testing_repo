@@ -5,16 +5,18 @@ using UnityEngine.InputSystem;
 
 public class Climbing : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField, Range(0f, 10f)]
     float climbingSpeed = 5f;
 
+    [SerializeField, Range(0f, 10f)]
+    float speedBoost = 2f;
+
+    bool boostActive;
     PlayerInput actionMap;
     Vector2 movementInput;
     Vector2 input;
 
     Rigidbody rb;
-
-    //Vector3 zero = Vector3.zero;
 
     #region Basic Functions
     void Awake()
@@ -26,6 +28,12 @@ public class Climbing : MonoBehaviour
         actionMap.Movement.Move.started += OnMove;
         actionMap.Movement.Move.performed += OnMove;
         actionMap.Movement.Move.canceled += OnMove;
+
+        // Currently, boostActive only shows true when button is held.
+        // Unsure how to make value true on press.
+        //actionMap.Actions.Boost.started += OnBoost;
+        actionMap.Actions.Boost.performed += OnBoost;
+        actionMap.Actions.Boost.canceled += OnBoost;
     }
 
     void Update()
@@ -35,6 +43,7 @@ public class Climbing : MonoBehaviour
 
     void FixedUpdate()
     {
+        
         SquareToCircle(movementInput);
         HandleClimbing(input);
     }
@@ -51,7 +60,9 @@ public class Climbing : MonoBehaviour
                 10f * Time.fixedDeltaTime);
         }
 
-        rb.velocity = transform.TransformDirection(input) * climbingSpeed;
+        rb.velocity = boostActive ?
+            transform.TransformDirection(input) * climbingSpeed * speedBoost : 
+            transform.TransformDirection(input) * climbingSpeed;
     }
 
     #region Input Functions
@@ -69,8 +80,13 @@ public class Climbing : MonoBehaviour
     {
         movementInput = context.ReadValue<Vector2>();
     }
-    #endregion
 
+    void OnBoost(InputAction.CallbackContext context)
+    {
+        boostActive = context.ReadValueAsButton();
+        Debug.Log($"boostActive = {boostActive}");
+    }
+    #endregion
 
     Vector2 SquareToCircle(Vector2 input)
     {
