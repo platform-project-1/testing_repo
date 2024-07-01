@@ -6,20 +6,35 @@ using UnityEngine.InputSystem;
 
 public class Debugging : MonoBehaviour
 {
+    CapsuleCollider capsuleCollider;
     PlayerInput actionMap;
     Rigidbody rb;
+    StateChecker stateChecker;
 
     [SerializeField]
     Transform resetPosition;
 
+    [SerializeField]
+    bool testRotations = false;
+
     #region Basic Functions
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
         actionMap = new PlayerInput();
+        capsuleCollider = GetComponent<CapsuleCollider>();
+        rb = GetComponent<Rigidbody>();
+        stateChecker = GetComponent<StateChecker>();
 
         actionMap.Debug.Quit.started += QuitEditor;
         actionMap.Debug.Reset.started += ResetPosition;
+    }
+
+    void Update()
+    {
+        if (testRotations)
+        {
+            TestRotations();
+        }
     }
     #endregion
 
@@ -65,6 +80,9 @@ public class Debugging : MonoBehaviour
     [SerializeField]
     bool drawCrossPattern = false;
 
+    [SerializeField]
+    bool drawSphere = false;
+
     void OnDrawGizmos()
     {
         if (drawLineOn)
@@ -79,9 +97,9 @@ public class Debugging : MonoBehaviour
         if (drawRayOn)
         {
             // Draws a 5 unit long red line in front of the object
-            Gizmos.color = Color.red;
-            Vector3 direction = transform.TransformDirection(Vector3.forward) * 5;
-            Gizmos.DrawRay(transform.position, direction);
+            Gizmos.color = Color.cyan;
+            Vector3 direction = transform.TransformDirection(Vector3.up) * 5;
+            Gizmos.DrawRay(stateChecker.hitData.hitInfo.point, stateChecker.hitData.hitInfo.normal * distance);
         }
 
         if (drawCrossPattern)
@@ -107,6 +125,45 @@ public class Debugging : MonoBehaviour
                 offset = Quaternion.AngleAxis(90f, transform.forward) * offset;
             }
             //checkDirection /= k;
+        }
+
+        if (drawSphere)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(stateChecker.hitData.hitInfo.point, 0.5f);
+        }
+    }
+    #endregion
+
+    #region Rotation Testing
+    [SerializeField, Range(0f, 10f)]
+    float rotationSpeed = 5f;
+
+    void TestRotations()
+    {
+        if (Gamepad.current.buttonEast.isPressed)
+        {
+            // Rotate GameObject
+            Quaternion currentRotations = transform.rotation;
+            Quaternion target = Quaternion.Euler(-90f, currentRotations.y, currentRotations.z);
+            transform.localRotation = target;
+            //transform.localRotation = Quaternion.Slerp(transform.rotation, target, rotationSpeed* Time.deltaTime);
+
+            // Rotate Collider
+            //The value can be 0, 1 or 2 corresponding to the X, Y and Z axes, respectively.
+            capsuleCollider.direction = 2;
+        }
+        if (Gamepad.current.buttonEast.wasReleasedThisFrame)
+        {
+            Debug.Log("check2");
+            // Rotate GameObject
+            Quaternion currentRotations = transform.rotation;
+            Quaternion target = Quaternion.Euler(0f, currentRotations.y, currentRotations.z);
+            transform.localRotation = Quaternion.Slerp(transform.rotation, target, rotationSpeed * Time.deltaTime);
+
+            // Rotate Collider
+            //The value can be 0, 1 or 2 corresponding to the X, Y and Z axes, respectively.
+            capsuleCollider.direction = 1;
         }
     }
     #endregion
