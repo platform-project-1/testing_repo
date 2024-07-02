@@ -7,13 +7,13 @@ public class Climbing : MonoBehaviour
 {
     CapsuleCollider capsuleCollider;
     Rigidbody rb;
-    StateChecker stateChecker;
+    StateManager stateChecker;
 
-    [SerializeField, Range(0f, 10f)]
-    float climbingSpeed = 5f;
+    //[SerializeField, Range(0f, 10f)]
+    //float climbingSpeed = 5f;
 
-    [SerializeField, Range(0f, 10f)]
-    float speedBoost = 2f;
+    //[SerializeField, Range(0f, 10f)]
+    //float speedBoost = 2f;
 
     [SerializeField]
     AnimationCurve animCurve;
@@ -33,7 +33,7 @@ public class Climbing : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
-        stateChecker = GetComponent<StateChecker>();
+        stateChecker = GetComponent<StateManager>();
 
         newHit = stateChecker.hitData.hitInfo;
 

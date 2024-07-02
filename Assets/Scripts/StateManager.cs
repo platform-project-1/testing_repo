@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.IMGUI.Controls.PrimitiveBoundsHandle;
 
-public class StateChecker : MonoBehaviour
+public class StateManager : MonoBehaviour
 {
     public enum PlayerState
     {
@@ -13,6 +13,7 @@ public class StateChecker : MonoBehaviour
         CLIMBING
     }
 
+    [HideInInspector]
     public PlayerState state;
     PlayerState currentState;
 
@@ -67,7 +68,7 @@ public class StateChecker : MonoBehaviour
         {
             if (CheckForWall()) 
             {
-                //Debug.Log($"state check2 = {state}");
+                Debug.Log($"state check2");
                 state = PlayerState.CLIMBING;
                 ChangeState(state);
             }
@@ -76,7 +77,7 @@ public class StateChecker : MonoBehaviour
         {
             if (!CheckForWall())
             {
-                //Debug.Log($"state check3 = {state}");
+                Debug.Log($"state check3");
                 state = PlayerState.GROUNDED;
                 ChangeState(state);
             }
@@ -123,13 +124,15 @@ public class StateChecker : MonoBehaviour
     void SetClimbingState()
     {
         // Enable/Disable Components
-        state = PlayerState.CLIMBING;
         rb.velocity = Vector3.zero;
         applyGravity.enabled = false;
         boxCollider.enabled = false;
         groundMovement.enabled = false;
         jumping.enabled = false;
         //climbing.enabled = true;
+
+        transform.up = hitData.hitInfo.normal;
+        transform.position = hitData.hitInfo.point;
 
         // Rotate GameObject
         //Quaternion currentRotations = transform.rotation;
@@ -144,12 +147,18 @@ public class StateChecker : MonoBehaviour
 
     bool CheckForWall()
     {
-        rayDirection = transform.forward;
-        //var hitData = new WallData();
-        var rayOrigin = transform.position + rayOffset;
+        Vector3 rayOrigin = Vector3.zero;
 
-        if (state == PlayerState.GROUNDED) rayDirection = transform.forward;
-        else if (state == PlayerState.CLIMBING) rayDirection = -transform.up;
+        if (state == PlayerState.GROUNDED)
+        {
+            rayOrigin = transform.position + rayOffset;
+            rayDirection = transform.forward;
+        }
+        else if (state == PlayerState.CLIMBING) 
+        {
+            rayOrigin = transform.position;
+            rayDirection = -transform.up;
+        }
 
         hitData.hitFound = Physics.Raycast(rayOrigin, rayDirection, out hitData.hitInfo, rayLength, wallLayer);
 
@@ -157,8 +166,6 @@ public class StateChecker : MonoBehaviour
 
         if (hitData.hitFound)
         {
-            transform.up = hitData.hitInfo.normal;
-            transform.position = hitData.hitInfo.point;
             return true;
             // COMMENTED CODE BELOW WILL BE USED FOR DETECTING CLIMBABLE WALLS BASED ON HEIGHT
             //hitData.targetHeight = hitData.hitInfo.transform.gameObject.GetComponent<Collider>().bounds.size;

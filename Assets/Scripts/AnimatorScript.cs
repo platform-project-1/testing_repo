@@ -9,7 +9,7 @@ public class AnimatorScript : MonoBehaviour
     CustomGravity gravity;
     GroundMovement groundMovement;
     Jumping jumping;
-    StateChecker stateChecker;
+    StateManager stateChecker;
 
     int moveMagHash;
     int currentAnimation;
@@ -26,7 +26,7 @@ public class AnimatorScript : MonoBehaviour
         gravity = GetComponent<CustomGravity>();
         groundMovement = GetComponent<GroundMovement>();
         jumping = GetComponent<Jumping>();
-        stateChecker = GetComponent<StateChecker>();
+        stateChecker = GetComponent<StateManager>();
 
         currentAnimation = IDLE_WALK_RUN;
         animator.CrossFade(currentAnimation, 0.2f);
@@ -40,7 +40,7 @@ public class AnimatorScript : MonoBehaviour
 
     void CheckAnimation()
     {
-        if (stateChecker.state == StateChecker.PlayerState.GROUNDED)
+        if (stateChecker.state == StateManager.PlayerState.GROUNDED)
         {
             float input = groundMovement.movementInput.magnitude;
             animator.SetFloat(moveMagHash, Mathf.Abs(input));
@@ -65,7 +65,7 @@ public class AnimatorScript : MonoBehaviour
             }
         }
 
-        if (stateChecker.state == StateChecker.PlayerState.CLIMBING)
+        if (stateChecker.state == StateManager.PlayerState.CLIMBING)
         {
             float input = climbing.movementInput.magnitude;
             animator.SetFloat(moveMagHash, Mathf.Abs(input));

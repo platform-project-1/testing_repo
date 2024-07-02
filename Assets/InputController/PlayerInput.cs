@@ -208,6 +208,24 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""2b0822dc-10e3-4860-9b3e-6cf7f79261d3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Step"",
+                    ""type"": ""Button"",
+                    ""id"": ""6d9cfd44-0dfa-482e-b68b-a7a25bcf80ec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -230,6 +248,28 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""be6ec641-ed57-4612-baed-f627210e151b"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""597e1e24-e6d6-46a8-87cb-95e6cd313050"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Step"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -288,6 +328,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_Quit = m_Debug.FindAction("Quit", throwIfNotFound: true);
         m_Debug_Reset = m_Debug.FindAction("Reset", throwIfNotFound: true);
+        m_Debug_Pause = m_Debug.FindAction("Pause", throwIfNotFound: true);
+        m_Debug_Step = m_Debug.FindAction("Step", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_Camera = m_Camera.FindAction("Camera", throwIfNotFound: true);
@@ -454,12 +496,16 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IDebugActions> m_DebugActionsCallbackInterfaces = new List<IDebugActions>();
     private readonly InputAction m_Debug_Quit;
     private readonly InputAction m_Debug_Reset;
+    private readonly InputAction m_Debug_Pause;
+    private readonly InputAction m_Debug_Step;
     public struct DebugActions
     {
         private @PlayerInput m_Wrapper;
         public DebugActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Quit => m_Wrapper.m_Debug_Quit;
         public InputAction @Reset => m_Wrapper.m_Debug_Reset;
+        public InputAction @Pause => m_Wrapper.m_Debug_Pause;
+        public InputAction @Step => m_Wrapper.m_Debug_Step;
         public InputActionMap Get() { return m_Wrapper.m_Debug; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -475,6 +521,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Reset.started += instance.OnReset;
             @Reset.performed += instance.OnReset;
             @Reset.canceled += instance.OnReset;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
+            @Step.started += instance.OnStep;
+            @Step.performed += instance.OnStep;
+            @Step.canceled += instance.OnStep;
         }
 
         private void UnregisterCallbacks(IDebugActions instance)
@@ -485,6 +537,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Reset.started -= instance.OnReset;
             @Reset.performed -= instance.OnReset;
             @Reset.canceled -= instance.OnReset;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
+            @Step.started -= instance.OnStep;
+            @Step.performed -= instance.OnStep;
+            @Step.canceled -= instance.OnStep;
         }
 
         public void RemoveCallbacks(IDebugActions instance)
@@ -561,6 +619,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnQuit(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
+        void OnStep(InputAction.CallbackContext context);
     }
     public interface ICameraActions
     {

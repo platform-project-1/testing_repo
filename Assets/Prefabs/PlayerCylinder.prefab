@@ -14,10 +14,10 @@ GameObject:
   - component: {fileID: 7577109319768451693}
   - component: {fileID: 4643995295135662048}
   - component: {fileID: 7077227009268893854}
-  - component: {fileID: 912481309399018720}
   - component: {fileID: 5649007817819975364}
   - component: {fileID: 8663834850042573423}
   - component: {fileID: 4727592492541962475}
+  - component: {fileID: 3599191077053230046}
   m_Layer: 0
   m_Name: PlayerCylinder
   m_TagString: Untagged
@@ -127,9 +127,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resetPosition: {fileID: 0}
+  testRotations: 0
   distance: 1
   drawLineOn: 0
   drawRayOn: 0
+  drawCrossPattern: 0
+  drawSphere: 0
+  rotationSpeed: 5
 --- !u!114 &7077227009268893854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,23 +150,8 @@ MonoBehaviour:
   maxJumpTime: 0.5
   maxJumpHeight: 1.75
   isGrounded: 0
+  isFalling: 0
   jumpVelocity: 0
---- !u!114 &912481309399018720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1849733800088253039}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9de73866c4287f4db8ea444e87e91cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rayLength: 1
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!114 &5649007817819975364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,6 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAcceleration: 20
+  movementInput: {x: 0, y: 0}
 --- !u!114 &8663834850042573423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,6 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxJumpPhases: 2
+  jumpPressed: 0
 --- !u!114 &4727592492541962475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,6 +192,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb80853b1fa568d4bbb6aa9e7cd49891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  climbingSpeed: 5
+  speedBoost: 2
+  animCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  movementInput: {x: 0, y: 0}
+--- !u!114 &3599191077053230046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849733800088253039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb3f464da7765464583b110101523cc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  rayLength: 1
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &2897718219688657611
 GameObject:
   m_ObjectHideFlags: 0
@@ -509,8 +526,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 0}
+  m_LookAt: {fileID: 5833973055740244848}
+  m_Follow: {fileID: 5833973055740244848}
   m_CommonLens: 1
   m_Lens:
     FieldOfView: 80
@@ -637,7 +654,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3683105517338876365}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2611698, y: -0.0000000113150165, z: 0.000000003061392, w: 0.9652929}
+  m_LocalRotation: {x: 0.2611698, y: 0.0000000113150165, z: -0.000000003061392, w: 0.9652929}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1134,7 +1151,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9065621472117636534}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.34042525, y: 0.000000022880313, z: -0.000000008283815, w: 0.9402717}
+  m_LocalRotation: {x: 0.34042525, y: -0.00000002288009, z: 0.000000008283735, w: 0.9402716}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

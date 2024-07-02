@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 490799082125525165}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.26116976, y: -0.0000000309132, z: 0.000000008363879, w: 0.9652929}
+  m_LocalRotation: {x: -0.12887144, y: 0.83959264, z: -0.22716027, w: -0.47631353}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -231,7 +231,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2477962377514590710}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3007817, y: 0.000000016409606, z: -0.0000000051753632, w: 0.95369303}
+  m_LocalRotation: {x: -0.14841753, y: 0.8295033, z: -0.26161394, w: -0.47058967}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -310,7 +310,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2650221876189256403}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.34042525, y: -0.000000022880096, z: 0.000000008283737, w: 0.9402717}
+  m_LocalRotation: {x: -0.16797923, y: 0.8178296, z: -0.29609513, w: -0.46396708}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -645,7 +645,7 @@ Transform:
   m_GameObject: {fileID: 6257289780926349540}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: -3}
+  m_LocalPosition: {x: 2.5751028, y: 2.5, z: 1.5391055}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -879,7 +879,7 @@ PrefabInstance:
       addedObject: {fileID: 7367116265906754924}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: db012a9abcd467740bc76b0ab5c69c9a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7285052415242747666}
+      addedObject: {fileID: 5985465986661474939}
   m_SourcePrefab: {fileID: 100100000, guid: db012a9abcd467740bc76b0ab5c69c9a, type: 3}
 --- !u!1 &4618190658773631696 stripped
 GameObject:
@@ -983,6 +983,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbingSpeed: 5
   speedBoost: 2
+  animCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  movementInput: {x: 0, y: 0}
 --- !u!114 &1583037451825579025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1014,10 +1021,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resetPosition: {fileID: 0}
+  testRotations: 0
   distance: 1
   drawLineOn: 0
   drawRayOn: 0
   drawCrossPattern: 0
+  drawSphere: 0
+  rotationSpeed: 5
 --- !u!114 &9088694376706701848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1046,7 +1056,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxJumpPhases: 2
   jumpPressed: 0
---- !u!114 &7285052415242747666
+--- !u!114 &5985465986661474939
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1055,13 +1065,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4618190658773631696}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9de73866c4287f4db8ea444e87e91cc, type: 3}
+  m_Script: {fileID: 11500000, guid: fb3f464da7765464583b110101523cc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
   rayLength: 1
   wallLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
 --- !u!4 &5430438739384637546 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: db012a9abcd467740bc76b0ab5c69c9a, type: 3}

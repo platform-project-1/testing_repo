@@ -9,13 +9,15 @@ public class Debugging : MonoBehaviour
     CapsuleCollider capsuleCollider;
     PlayerInput actionMap;
     Rigidbody rb;
-    StateChecker stateChecker;
+    StateManager stateChecker;
 
     [SerializeField]
     Transform resetPosition;
 
-    [SerializeField]
-    bool testRotations = false;
+    //[SerializeField]
+    //bool testRotations = false;
+
+    bool pausePressed = false;
 
     #region Basic Functions
     void Awake()
@@ -23,18 +25,19 @@ public class Debugging : MonoBehaviour
         actionMap = new PlayerInput();
         capsuleCollider = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
-        stateChecker = GetComponent<StateChecker>();
+        stateChecker = GetComponent<StateManager>();
 
         actionMap.Debug.Quit.started += QuitEditor;
         actionMap.Debug.Reset.started += ResetPosition;
+        actionMap.Debug.Pause.started += OnPause;
     }
 
     void Update()
     {
-        if (testRotations)
-        {
-            TestRotations();
-        }
+        //if (testRotations)
+        //{
+        //    TestRotations();
+        //}
     }
     #endregion
 
@@ -60,6 +63,12 @@ public class Debugging : MonoBehaviour
         this.transform.position = resetPosition.position;
         transform.localRotation = Quaternion.identity;
         rb.velocity = Vector3.zero;
+    }
+
+    void OnPause(InputAction.CallbackContext context)
+    {
+        pausePressed = context.ReadValueAsButton();
+        if (pausePressed) EditorApplication.isPaused = true;
     }
     #endregion
 
@@ -136,35 +145,35 @@ public class Debugging : MonoBehaviour
     #endregion
 
     #region Rotation Testing
-    [SerializeField, Range(0f, 10f)]
-    float rotationSpeed = 5f;
+    //[SerializeField, Range(0f, 10f)]
+    //float rotationSpeed = 5f;
 
-    void TestRotations()
-    {
-        if (Gamepad.current.buttonEast.isPressed)
-        {
-            // Rotate GameObject
-            Quaternion currentRotations = transform.rotation;
-            Quaternion target = Quaternion.Euler(-90f, currentRotations.y, currentRotations.z);
-            transform.localRotation = target;
-            //transform.localRotation = Quaternion.Slerp(transform.rotation, target, rotationSpeed* Time.deltaTime);
+    //void TestRotations()
+    //{
+    //    //if (Gamepad.current.buttonEast.isPressed)
+    //    //{
+    //    //    // Rotate GameObject
+    //    //    Quaternion currentRotations = transform.rotation;
+    //    //    Quaternion target = Quaternion.Euler(-90f, currentRotations.y, currentRotations.z);
+    //    //    transform.localRotation = target;
+    //    //    //transform.localRotation = Quaternion.Slerp(transform.rotation, target, rotationSpeed* Time.deltaTime);
 
-            // Rotate Collider
-            //The value can be 0, 1 or 2 corresponding to the X, Y and Z axes, respectively.
-            capsuleCollider.direction = 2;
-        }
-        if (Gamepad.current.buttonEast.wasReleasedThisFrame)
-        {
-            Debug.Log("check2");
-            // Rotate GameObject
-            Quaternion currentRotations = transform.rotation;
-            Quaternion target = Quaternion.Euler(0f, currentRotations.y, currentRotations.z);
-            transform.localRotation = Quaternion.Slerp(transform.rotation, target, rotationSpeed * Time.deltaTime);
+    //    //    // Rotate Collider
+    //    //    //The value can be 0, 1 or 2 corresponding to the X, Y and Z axes, respectively.
+    //    //    capsuleCollider.direction = 2;
+    //    //}
+    //    //if (Gamepad.current.buttonEast.wasReleasedThisFrame)
+    //    //{
+    //    //    Debug.Log("check2");
+    //    //    // Rotate GameObject
+    //    //    Quaternion currentRotations = transform.rotation;
+    //    //    Quaternion target = Quaternion.Euler(0f, currentRotations.y, currentRotations.z);
+    //    //    transform.localRotation = Quaternion.Slerp(transform.rotation, target, rotationSpeed * Time.deltaTime);
 
-            // Rotate Collider
-            //The value can be 0, 1 or 2 corresponding to the X, Y and Z axes, respectively.
-            capsuleCollider.direction = 1;
-        }
-    }
+    //    //    // Rotate Collider
+    //    //    //The value can be 0, 1 or 2 corresponding to the X, Y and Z axes, respectively.
+    //    //    capsuleCollider.direction = 1;
+    //    //}
+    //}
     #endregion
 }
