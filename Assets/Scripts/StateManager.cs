@@ -59,6 +59,7 @@ public class StateManager : MonoBehaviour
     {
         //Debug.Log($"TransformDirection = {transform.TransformDirection(Vector2.one * 0.5f)}");
         CheckState();
+        Debug.Log($"state  = {state}");
     }
 
     void CheckState()
@@ -68,7 +69,7 @@ public class StateManager : MonoBehaviour
         {
             if (CheckForWall()) 
             {
-                Debug.Log($"state check2");
+                //Debug.Log($"state check2");
                 state = PlayerState.CLIMBING;
                 ChangeState(state);
             }
@@ -91,7 +92,7 @@ public class StateManager : MonoBehaviour
             currentState = newState;
             if (newState == PlayerState.GROUNDED) SetGroundedState();
             else if (newState == PlayerState.CLIMBING) SetClimbingState();
-            StartCoroutine(WaitForChange());
+            //StartCoroutine(WaitForChange());
         }
         else return;
     }
@@ -148,21 +149,23 @@ public class StateManager : MonoBehaviour
     bool CheckForWall()
     {
         Vector3 rayOrigin = Vector3.zero;
-
+        Debug.Log($"wallcheck: state = {state}");
         if (state == PlayerState.GROUNDED)
         {
+            Debug.Log($"grounded check: state = {state}");
             rayOrigin = transform.position + rayOffset;
             rayDirection = transform.forward;
         }
         else if (state == PlayerState.CLIMBING) 
         {
+            Debug.Log($"climbing check: state = {state}");
             rayOrigin = transform.position;
-            rayDirection = -transform.up;
+            rayDirection = transform.forward;
         }
 
         hitData.hitFound = Physics.Raycast(rayOrigin, rayDirection, out hitData.hitInfo, rayLength, wallLayer);
 
-        Debug.DrawRay(rayOrigin, transform.forward * rayLength, (hitData.hitFound) ? Color.red : Color.green);
+        Debug.DrawRay(rayOrigin, rayDirection * rayLength, (hitData.hitFound) ? Color.red : Color.green);
 
         if (hitData.hitFound)
         {

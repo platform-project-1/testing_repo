@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.InputSystem;
 
 public class GroundMovement : MonoBehaviour
@@ -17,6 +18,8 @@ public class GroundMovement : MonoBehaviour
 
     [HideInInspector]
     public Vector2 movementInput;
+    bool moving;
+
     Vector3 velocity;
 
     #region Basic Functions
@@ -39,6 +42,11 @@ public class GroundMovement : MonoBehaviour
         HandleMoving();
         HandleRotation();
     }
+
+    void Update()
+    {
+        
+    }
     #endregion
 
     #region Input Functions
@@ -55,6 +63,7 @@ public class GroundMovement : MonoBehaviour
     void OnMove(InputAction.CallbackContext context)
     {
         movementInput = context.ReadValue<Vector2>();
+        moving = movementInput.x != 0 || movementInput.y != 0;
     }
 
     void OnBoost(InputAction.CallbackContext context)
@@ -73,6 +82,8 @@ public class GroundMovement : MonoBehaviour
         // Getting camera info
         Vector3 forward = Camera.main.transform.forward;
         Vector3 right = Camera.main.transform.right;
+        forward.y = 0f;
+        right.y = 0f;
 
         // Creates new vector to adjust movement based on camera
         Vector3 move = new Vector3(movementInput.x, 0f, movementInput.y);
@@ -88,11 +99,18 @@ public class GroundMovement : MonoBehaviour
 
     void HandleRotation()
     {
-        velocity = rb.velocity;
-        if (velocity.x > 0.01f || velocity.z > 0.01f) 
+        // Getting camera info
+        Vector3 forward = Camera.main.transform.forward;
+        Vector3 right = Camera.main.transform.right;
+        forward.y = 0f;
+        right.y = 0f;
+
+        Vector3 positionToLookAt = new Vector3 (movementInput.x, 0f, movementInput.y);
+        positionToLookAt = forward * positionToLookAt.z + right * positionToLookAt.x;
+        positionToLookAt.Normalize();
+        if (moving)
         {
-            Vector3 rotate = new Vector3(velocity.x * Time.deltaTime, 0f, velocity.z * Time.deltaTime);
-            transform.rotation = Quaternion.LookRotation(rotate);
+            transform.rotation = Quaternion.LookRotation(positionToLookAt);
         }
     }
     #endregion
